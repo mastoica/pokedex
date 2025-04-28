@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { SimplePokemon } from 'types/simple-pokemon.type';
 
 import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item.component';
@@ -24,6 +24,20 @@ import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item
                 @for (pokemon of pokemonList(); let index = $index; track pokemon.name) {
                     <app-pokemon-list-item [index]="$index" [pokemon]="pokemon" />
                 }
+
+                <div class="load-more-container">
+                    @if (isLoading()) {
+                        <div class="spinner">
+                            <div class="spinner-inner"></div>
+                        </div>
+                    }
+
+                    @if (hasNextPage() && !isLoading()) {
+                        <button class="load-more-button" (click)="loadMore.emit()">
+                            <span>Load More</span>
+                        </button>
+                    }
+                </div>
             </section>
         </div>
 
@@ -34,4 +48,7 @@ import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item
 })
 export class PokemonListComponent {
     readonly pokemonList = input<SimplePokemon[]>([]);
+    readonly isLoading = input<boolean>(false);
+    readonly hasNextPage = input<boolean>(false);
+    readonly loadMore = output<void>();
 }

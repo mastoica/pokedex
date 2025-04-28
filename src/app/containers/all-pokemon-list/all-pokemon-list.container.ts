@@ -1,31 +1,53 @@
 import { Component, inject, signal } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-import { injectQuery } from '@tanstack/angular-query-experimental';
+import { injectInfiniteQuery } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
 import { PokemonListResponse } from 'types/pokemon-list-response.type';
+import { SimplePokemon } from 'types/simple-pokemon.type';
 import { PokemonListComponent } from '../../components/pokemon-list/pokemon-list.component';
 @Component({
     selector: 'app-all-pokemon-list',
     imports: [PokemonListComponent],
-    template: ` <app-pokemon-list [pokemonList]="pokemonListQuery.data()?.results || []" /> `,
+    template: `
+        <app-pokemon-list
+            [pokemonList]="allPokemon()"
+            [isLoading]="pokemonListQuery.isFetchingNextPage()"
+            [hasNextPage]="!!pokemonListQuery.hasNextPage()"
+            (loadMore)="loadNextPage()"
+        />
+    `,
 })
 export class AllPokemonListContainer {
     private readonly httpClient = inject(HttpClient);
     private readonly pageSize = 20;
-    private readonly offset = signal(0);
 
-    readonly pokemonListQuery = injectQuery(() => ({
-        queryKey: ['pokemon-list', this.offset()],
-        queryFn: () =>
-            firstValueFrom(
-                this.httpClient.get<PokemonListResponse>(
-                    `/api/v2/pokemon?offset=${this.offset()}&limit=${this.pageSize}`,
-                ),
-            ),
+    allPokemon = signal<SimplePokemon[]>([]);
+
+    readonly pokemonListQuery = injectInfiniteQuery(() => ({
+        queryKey: ['pokemon-list'],
+        queryFn: async ({ pageParam = 0 }) => {
+            const response = await firstValueFrom(
+                this.httpClient.get<PokemonListResponse>(`/api/v2/pokemon?offset=${pageParam}&limit=${this.pageSize}`),
+            );
+
+            this.allPokemon.update((currentPokemons) => [...currentPokemons, ...response.results]);
+            return response;
+        },
+        initialPageParam: 0,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined;
+
+            const match = lastPage.next.match(/offset=(\d+)/);
+            return match ? parseInt(match[1]) : undefined;
+        },
     }));
 
-    // allPokemon = signal<SimplePokemon[]>(hardcodedResponse.results);
+    loadNextPage() {
+        if (this.pokemonListQuery.hasNextPage()) {
+            this.pokemonListQuery.fetchNextPage();
+        }
+    }
 }
 
 // TODO: replace this with a real API call
