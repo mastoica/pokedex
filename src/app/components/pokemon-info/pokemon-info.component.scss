@@ -1,27 +1,41 @@
-// TODO: migrate file to tailwind
-
 :host {
-    position: relative;
     display: block;
     width: 100%;
     height: 100%;
 }
 
-.sprite-wrapper {
-    position: absolute;
-    top: 0;
-    right: 0;
+.pokemon-sprite {
+    filter: grayscale(0.5) brightness(150%);
+    animation: bounce 2s infinite ease-in-out;
+    transition: all 0.3s ease;
+    transform: translateZ(0);
+}
 
-    height: 96px;
-    width: 96px;
+.sprite-container:hover .pokemon-sprite {
+    filter: grayscale(0) brightness(100%);
+    transform: scale(1.15);
+}
 
-    .sprite {
-        height: 100%;
-        width: 100%;
+.sprite-shadow {
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70%);
+    transform: translateZ(0);
+    transition: all 0.3s ease;
+}
 
-        background-position: center;
-        background-size: contain;
-        image-rendering: pixelated;
-        filter: grayscale(1) brightness(150%);
+.sprite-container:hover .sprite-shadow {
+    opacity: 0.5;
+    width: 20px;
+    filter: blur(2px);
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
     }
 }

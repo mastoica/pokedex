@@ -3,9 +3,11 @@ import { Component, OnChanges, input } from '@angular/core';
 @Component({
     selector: 'app-typewriter',
     template: `
-        @if (typeWriterText) {
-            <p>{{ typeWriterText }}</p>
-        }
+        <div class="typewriter-container overflow-hidden inline-block">
+            @if (typeWriterText) {
+                <p class="whitespace-nowrap m-0 animate-typing">{{ typeWriterText }}</p>
+            }
+        </div>
     `,
     styleUrl: './typewriter.component.scss',
 })

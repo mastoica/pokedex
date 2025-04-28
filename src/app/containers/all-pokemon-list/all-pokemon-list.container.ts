@@ -11,7 +11,7 @@ import { PokemonListComponent } from '../../components/pokemon-list/pokemon-list
     imports: [PokemonListComponent],
     template: `
         <app-pokemon-list
-            [pokemonList]="allPokemon()"
+            [pokemonList]="$allPokemon()"
             [isLoading]="pokemonListQuery.isFetchingNextPage()"
             [hasNextPage]="!!pokemonListQuery.hasNextPage()"
             (loadMore)="loadNextPage()"
@@ -22,7 +22,7 @@ export class AllPokemonListContainer {
     private readonly httpClient = inject(HttpClient);
     private readonly pageSize = 20;
 
-    allPokemon = signal<SimplePokemon[]>([]);
+    $allPokemon = signal<SimplePokemon[]>([]);
 
     readonly pokemonListQuery = injectInfiniteQuery(() => ({
         queryKey: ['pokemon-list'],
@@ -31,7 +31,7 @@ export class AllPokemonListContainer {
                 this.httpClient.get<PokemonListResponse>(`/api/v2/pokemon?offset=${pageParam}&limit=${this.pageSize}`),
             );
 
-            this.allPokemon.update((currentPokemons) => [...currentPokemons, ...response.results]);
+            this.$allPokemon.update((currentPokemons) => [...currentPokemons, ...response.results]);
             return response;
         },
         initialPageParam: 0,

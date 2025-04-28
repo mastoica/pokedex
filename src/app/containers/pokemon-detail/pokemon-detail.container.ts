@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { Pokemon } from 'types/pokemon.type';
 
 import { injectTwHostClass } from 'util/inject-tw-host-class.util';
 import { PokemonInfoComponent } from '../../components/pokemon-info/pokemon-info.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-pokemon-detail',
@@ -35,13 +37,14 @@ import { PokemonInfoComponent } from '../../components/pokemon-info/pokemon-info
 })
 export class PokemonDetailContainer {
     private readonly httpClient = inject(HttpClient);
-    private readonly pokemonId = signal('bulbasaur');
+    private readonly route = inject(ActivatedRoute);
+    private readonly $pokemonId = toSignal(this.route.params.pipe(map((params) => params['pokemonId'] || 'bulbasaur')));
 
     readonly currentPokemonInfo = injectQuery(() => ({
-        queryKey: ['pokemon', this.pokemonId()],
+        queryKey: ['pokemon', this.$pokemonId()],
         queryFn: () =>
             // TODO: use https://github.com/PokeAPI/pokeapi-js-wrapper instead?
-            firstValueFrom(this.httpClient.get<Pokemon>(`/api/v2/pokemon/${this.pokemonId()}`)),
+            firstValueFrom(this.httpClient.get<Pokemon>(`/api/v2/pokemon/${this.$pokemonId()}`)),
     }));
 
     constructor() {
