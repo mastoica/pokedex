@@ -1,0 +1,65 @@
+.pokemon-list {
+    flex-basis: 50%;
+
+    z-index: 1;
+
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 32px;
+
+    // Black background should fill height
+    ::ng-deep app-pokemon-list {
+        height: 100%;
+    }
+}
+
+.pokemon-detail-wrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 50%;
+    background: #e02108;
+    clip-path: polygon(0 0, 73% 0, 83% 3rem, 100% 3rem, 100% 100%, 0 100%);
+    border-bottom-right-radius: 32px;
+    margin-top: 80px;
+}
+
+.box-shadow {
+    display: flex;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+    width: 50%;
+}
+
+::ng-deep app-pokemon-detail {
+    flex-basis: 50%;
+    flex-grow: 1;
+    background: #d71f06;
+    margin: 12px;
+    clip-path: polygon(0 0, 73% 0, 83% 3rem, 100% 3rem, 100% 100%, 0 100%);
+    padding-top: 100px;
+    border-bottom-right-radius: 32px;
+    box-shadow: inset 0 0 24px 0 rgba(0, 0, 0, 0.5);
+    background: linear-gradient(
+        133deg,
+        rgba(215, 31, 6, 1) 0%,
+        rgba(215, 31, 6, 1) 55%,
+        rgba(226, 88, 70, 1) 75%,
+        rgba(215, 31, 6, 1) 100%
+    );
+    z-index: 1;
+}
+
+.divider {
+    width: 40px;
+    border: 2px solid #8d1000;
+    background: -webkit-linear-gradient(left, #d71f06 0%, #8d1000 50%, #d71f06 100%);
+
+    z-index: 2;
+}
+
+.divider-hl {
+    border-top: 5px solid black;
+    border-bottom: 5px solid black;
+    width: 40px;
+    margin-top: 150px;
+    height: 600px;
+}

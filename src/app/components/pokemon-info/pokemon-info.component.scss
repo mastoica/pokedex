@@ -1,0 +1,27 @@
+// TODO: migrate file to tailwind
+
+:host {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.sprite-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    height: 96px;
+    width: 96px;
+
+    .sprite {
+        height: 100%;
+        width: 100%;
+
+        background-position: center;
+        background-size: contain;
+        image-rendering: pixelated;
+        filter: grayscale(1) brightness(150%);
+    }
+}

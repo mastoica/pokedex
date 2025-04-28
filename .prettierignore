@@ -1,0 +1,13 @@
+# dependencies
+/node_modules
+
+/dist
+/out
+/assets
+
+# misc
+.DS_Store
+.vscode
+package.json
+package-lock.json
+npm-debug.log*

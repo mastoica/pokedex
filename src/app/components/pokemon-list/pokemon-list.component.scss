@@ -1,0 +1,113 @@
+// TODO: migrate file to tailwind where possible
+
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    z-index: 2;
+}
+
+.nav-shadow {
+    z-index: 1;
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 24px;
+    box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.5);
+}
+
+nav {
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    background: #d71f06;
+    padding: 32px 64px 32px 30px;
+
+    clip-path: polygon(100% 0, 100% 5rem, 6rem 100%, 0 100%, 0 0);
+
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.top-bar {
+    display: flex;
+    flex-grow: 1;
+    height: 80px;
+    padding: 20px 0;
+    margin-left: -16px;
+    z-index: 2;
+    background: rgb(215, 31, 6);
+    background: rgb(215, 31, 6);
+    background: linear-gradient(
+        133deg,
+        rgba(215, 31, 6, 1) 0%,
+        rgba(215, 31, 6, 1) 40%,
+        rgba(226, 88, 70, 1) 60%,
+        rgba(215, 31, 6, 1) 100%
+    );
+    box-shadow: 32px 8px 8px 0px rgba(0, 0, 0, 0.5);
+}
+
+.big-button {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+
+    border: 4px solid white;
+    box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.1);
+}
+
+.small-button {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    margin: 0 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.blue {
+    background: radial-gradient(#9af0ff, #12b2d6);
+}
+.green {
+    background: radial-gradient(#b0fb7b, #50fb05);
+}
+.yellow {
+    background: radial-gradient(#ffdc26, #f3b438);
+}
+.red {
+    background: radial-gradient(#da181f, #b90a0a);
+}
+
+// Main section
+.section-wrapper {
+    display: flex;
+    max-height: calc(100% - 76px);
+    flex-grow: 1;
+    margin-top: -48px;
+    padding: 0 32px 32px 32px;
+
+    background: #d71f06;
+    border-bottom-left-radius: 32px;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    background: black;
+    color: white;
+    flex-grow: 1;
+    overflow: auto;
+    padding: 48px 8px 8px;
+    box-shadow: inset 0px -1px 2px 3px grey;
+
+    border-radius: 32px;
+    border-bottom-left-radius: 16px;
+    border-top-right-radius: 0;
+}

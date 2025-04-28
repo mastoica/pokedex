@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+@theme {
+    --inset-shadow: -1px -1px 2px 2px grey;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: url('assets/background.png');
+    background-position: center;
+    background-size: cover;
+}

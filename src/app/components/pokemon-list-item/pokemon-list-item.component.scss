@@ -1,0 +1,13 @@
+// TODO: migrate file to tailwind
+
+a {
+    display: block;
+    padding: 8px;
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+        background-color: rgba(200, 200, 200, 0.3);
+    }
+}
