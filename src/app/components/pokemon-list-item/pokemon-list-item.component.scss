@@ -1,13 +1,17 @@
 // TODO: migrate file to tailwind
 
-a {
+:host {
     display: block;
-    padding: 8px;
-    border-radius: 4px;
-    color: white;
-    text-decoration: none;
+    margin-bottom: 4px;
+}
 
-    &:hover {
-        background-color: rgba(200, 200, 200, 0.3);
-    }
+:host:last-child {
+    margin-bottom: 0;
+}
+
+.selected-pokemon {
+    background-color: rgba(59, 130, 246, 0.15);
+    border-left: 3px solid #3b82f6;
+    transform: translateX(4px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
