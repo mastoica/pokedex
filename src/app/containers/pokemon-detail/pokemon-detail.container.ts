@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PokemonApiService } from 'services/pokemon-api.service';
 import { injectTwHostClass } from 'util/inject-tw-host-class.util';
 import { PokemonInfoComponent } from '../../components/pokemon-info/pokemon-info.component';
-import { PokemonTabsComponent } from '../../components/pokemon.tabs/pokemon-tabs.component';
+import { PokemonTabsComponent } from '../../components/pokemon-tabs/pokemon-tabs.component';
 
 @Component({
     selector: 'app-pokemon-detail',
