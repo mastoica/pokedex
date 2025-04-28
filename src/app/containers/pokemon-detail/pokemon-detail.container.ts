@@ -1,5 +1,4 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { injectQuery } from '@tanstack/angular-query-experimental';
@@ -7,6 +6,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { Pokemon } from 'types/pokemon.type';
 
 import { ActivatedRoute } from '@angular/router';
+import { PokemonApiService } from 'services/pokemon-api.service';
 import { injectTwHostClass } from 'util/inject-tw-host-class.util';
 import { PokemonInfoComponent } from '../../components/pokemon-info/pokemon-info.component';
 import { PokemonTabsComponent } from '../../components/pokemon.tabs/pokemon-tabs.component';
@@ -40,12 +40,23 @@ import { PokemonTabsComponent } from '../../components/pokemon.tabs/pokemon-tabs
                     [class.opacity-40]="currentPokemonInfo.isLoading()"
                 />
             } @else {
-                <div class="flex flex-row *:flex-auto gap-2">
-                    <button class="bg-cyan-300 p-2 rounded-md">Stats</button>
-                    <button class="bg-cyan-300 p-2 rounded-md">Moves</button>
-                    <button class="bg-cyan-300 p-2 rounded-md">Abilities</button>
+                <div class="loading-tabs-container">
+                    <div class="tab-header-placeholder flex gap-1 mb-2">
+                        <div class="tab-button-placeholder flex-1 py-2 px-3 rounded-t-lg"></div>
+                        <div class="tab-button-placeholder flex-1 py-2 px-3 rounded-t-lg"></div>
+                        <div class="tab-button-placeholder flex-1 py-2 px-3 rounded-t-lg"></div>
+                        <div class="tab-button-placeholder flex-1 py-2 px-3 rounded-t-lg"></div>
+                    </div>
+                    <div class="tab-content-placeholder h-[260px] rounded-b-lg rounded-tr-lg p-4">
+                        <div class="h-6 w-32 bg-gray-700 rounded mb-4"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="h-16 bg-gray-700 rounded"></div>
+                            <div class="h-16 bg-gray-700 rounded"></div>
+                            <div class="h-16 bg-gray-700 rounded"></div>
+                            <div class="h-16 bg-gray-700 rounded"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="grow bg-gray-700 p-4 rounded-md text-white">Loading Pokémon data...</div>
             }
 
             @if (currentPokemonInfo.isLoading() && cachedPokemon()) {
@@ -117,6 +128,44 @@ import { PokemonTabsComponent } from '../../components/pokemon.tabs/pokemon-tabs
                 flex-grow: 1;
             }
 
+            .loading-tabs-container {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .tab-header-placeholder {
+                margin-bottom: 0.5rem;
+            }
+
+            .tab-button-placeholder {
+                background-color: #2d3748;
+                height: 36px;
+                border-radius: 0.5rem 0.5rem 0 0;
+                opacity: 0.6;
+                animation: pulse 1.5s infinite alternate;
+            }
+
+            .tab-content-placeholder {
+                background-color: #1a202c;
+                border: 1px solid #2d3748;
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            .tab-content-placeholder > div {
+                opacity: 0.4;
+                animation: pulse 1.5s infinite alternate;
+            }
+
+            @keyframes pulse {
+                0% {
+                    opacity: 0.4;
+                }
+                100% {
+                    opacity: 0.7;
+                }
+            }
+
             @keyframes spin {
                 0% {
                     transform: rotate(0deg);
@@ -129,7 +178,7 @@ import { PokemonTabsComponent } from '../../components/pokemon.tabs/pokemon-tabs
     ],
 })
 export class PokemonDetailContainer {
-    private readonly httpClient = inject(HttpClient);
+    private readonly pokemonService = inject(PokemonApiService);
     private readonly route = inject(ActivatedRoute);
     readonly $pokemonId = toSignal(this.route.params.pipe(map((params) => params['pokemonId'] || 'bulbasaur')));
 
@@ -137,7 +186,7 @@ export class PokemonDetailContainer {
 
     readonly currentPokemonInfo = injectQuery(() => ({
         queryKey: ['pokemon', this.$pokemonId()],
-        queryFn: () => firstValueFrom(this.httpClient.get<Pokemon>(`/api/v2/pokemon/${this.$pokemonId()}`)),
+        queryFn: () => firstValueFrom(this.pokemonService.getPokemonByName(this.$pokemonId())),
         onSuccess: (data) => {
             this.cachedPokemon.set(data);
         },
