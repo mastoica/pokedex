@@ -1,7 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SimplePokemon } from 'types/simple-pokemon.type';
-
+import { NamedAPIResource } from 'pokenode-ts';
 @Component({
     selector: 'app-pokemon-list-item',
     template: `
@@ -45,7 +44,7 @@ import { SimplePokemon } from 'types/simple-pokemon.type';
 })
 export class PokemonListItemComponent {
     readonly index = input.required<number>();
-    readonly pokemon = input.required<SimplePokemon>();
+    readonly pokemon = input.required<NamedAPIResource>();
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
 

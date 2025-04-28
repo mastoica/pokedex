@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Pokemon } from 'types/pokemon.type';
+import { Pokemon } from 'pokenode-ts';
 import { TabContentComponent } from '../shared/tab-content.component';
 
 @Component({

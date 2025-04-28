@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, inject, input, OnInit, output } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { NamedAPIResource } from 'pokenode-ts';
 import { filter } from 'rxjs';
-import { SimplePokemon } from 'types/simple-pokemon.type';
 import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item.component';
-
 @Component({
     selector: 'app-pokemon-list',
     template: `
@@ -84,7 +83,7 @@ import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item
     ],
 })
 export class PokemonListComponent implements OnInit, AfterViewInit {
-    readonly pokemonList = input<SimplePokemon[]>([]);
+    readonly pokemonList = input<NamedAPIResource[]>([]);
     readonly isLoading = input<boolean>(false);
     readonly hasNextPage = input<boolean>(false);
     readonly loadMore = output<void>();
@@ -129,7 +128,7 @@ export class PokemonListComponent implements OnInit, AfterViewInit {
         }
     }
 
-    findPokemonByName(name: string): SimplePokemon | undefined {
+    findPokemonByName(name: string): NamedAPIResource | undefined {
         // First try to find in the current list
         let pokemon = this.pokemonList().find((p) => p.name === name);
 
@@ -143,7 +142,7 @@ export class PokemonListComponent implements OnInit, AfterViewInit {
         return pokemon;
     }
 
-    updateSelectedPokemon(pokemon: SimplePokemon) {
+    updateSelectedPokemon(pokemon: NamedAPIResource) {
         const idMatch = pokemon.url.match(/\/([0-9]+)\/$/);
         if (idMatch) {
             this.currentSelectedPokemonId = idMatch[1];

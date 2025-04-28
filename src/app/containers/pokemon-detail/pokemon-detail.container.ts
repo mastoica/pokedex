@@ -3,9 +3,9 @@ import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { firstValueFrom, map } from 'rxjs';
-import { Pokemon } from 'types/pokemon.type';
 
 import { ActivatedRoute } from '@angular/router';
+import { Pokemon } from 'pokenode-ts';
 import { PokemonApiService } from 'services/pokemon-api.service';
 import { injectTwHostClass } from 'util/inject-tw-host-class.util';
 import { PokemonInfoComponent } from '../../components/pokemon-info/pokemon-info.component';

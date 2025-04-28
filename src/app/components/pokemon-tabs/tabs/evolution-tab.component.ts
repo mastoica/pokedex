@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
+import { Pokemon } from 'pokenode-ts';
 import { firstValueFrom } from 'rxjs';
 import { PokemonApiService } from 'services/pokemon-api.service';
-import { Pokemon } from 'types/pokemon.type';
 import { EvolutionItemComponent } from '../shared/evolution-item.component';
 import { EvolutionTriggerComponent } from '../shared/evolution-trigger.component';
 import { TabContentComponent } from '../shared/tab-content.component';

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, effect, inject, input, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Pokemon } from 'types/pokemon.type';
+import { Pokemon } from 'pokenode-ts';
 import { AbilitiesTabComponent } from './tabs/abilities-tab.component';
 import { EvolutionTabComponent } from './tabs/evolution-tab.component';
 import { MovesTabComponent } from './tabs/moves-tab.component';

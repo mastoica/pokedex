@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 
 import { injectInfiniteQuery } from '@tanstack/angular-query-experimental';
+import { NamedAPIResource } from 'pokenode-ts';
 import { firstValueFrom } from 'rxjs';
 import { PokemonApiService } from 'services/pokemon-api.service';
-import { SimplePokemon } from 'types/simple-pokemon.type';
 import { PokemonListComponent } from '../../components/pokemon-list/pokemon-list.component';
 @Component({
     selector: 'app-all-pokemon-list',
@@ -21,7 +21,7 @@ export class AllPokemonListContainer {
     private readonly pokemonService = inject(PokemonApiService);
     private readonly pageSize = 20;
 
-    $allPokemon = signal<SimplePokemon[]>([]);
+    $allPokemon = signal<NamedAPIResource[]>([]);
 
     readonly pokemonListQuery = injectInfiniteQuery(() => ({
         queryKey: ['pokemon-list'],

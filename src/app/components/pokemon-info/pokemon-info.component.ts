@@ -1,8 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, input } from '@angular/core';
-import { Pokemon } from 'types/pokemon.type';
+import { Pokemon } from 'pokenode-ts';
 import { TypewriterComponent } from '../../typewriter/typewriter.component';
-
 @Component({
     selector: 'app-pokemon-info',
     imports: [TypewriterComponent],
@@ -144,7 +143,7 @@ import { TypewriterComponent } from '../../typewriter/typewriter.component';
 export class PokemonInfoComponent {
     readonly pokemonInfo = input<Pokemon>();
 
-    formatPokemonId(id: string | undefined): string {
+    formatPokemonId(id: number): string {
         if (!id) return '000';
         return id.toString().padStart(3, '0');
     }
