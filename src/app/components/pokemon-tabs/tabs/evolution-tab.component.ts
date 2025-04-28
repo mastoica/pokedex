@@ -221,10 +221,9 @@ export class EvolutionTabComponent implements OnChanges {
         try {
             this.isLoading.set(true);
 
-            const species = await firstValueFrom(this.pokemonService.getPokemonSpecies(this.pokemon.name));
-            const evolutionUrl = species.evolution_chain.url;
-            const evolutionId = evolutionUrl.split('/').filter(Boolean).pop();
-            const evolutionData = await firstValueFrom(this.pokemonService.getEvolutionChain(evolutionId));
+            const evolutionData = await firstValueFrom(
+                this.pokemonService.getEvolutionChainByPokemonName(this.pokemon.name),
+            );
 
             this.evolutionChain.set(evolutionData);
         } catch (error) {

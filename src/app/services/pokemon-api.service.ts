@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Pokedex } from 'pokeapi-js-wrapper';
-import { NamedAPIResourceList, Pokemon, PokemonClient } from 'pokenode-ts';
-import { Observable, from } from 'rxjs';
+// import { Pokedex } from 'pokeapi-js-wrapper';
+import { EvolutionClient, NamedAPIResourceList, Pokemon, PokemonClient } from 'pokenode-ts';
+import { Observable, catchError, from, of, switchMap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PokemonApiService {
-    private pokeApi: any;
+    // private pokeApi: any;
     private pokemonClient = new PokemonClient();
+    private evolutionClient = new EvolutionClient();
 
-    constructor() {
-        this.pokeApi = new Pokedex({
-            cache: true,
-            cacheImages: true,
-            timeout: 5000,
-        });
-    }
+    // constructor() {
+    //     this.pokeApi = new Pokedex({
+    //         cache: true,
+    //         cacheImages: true,
+    //         timeout: 5000,
+    //     });
+    // }
 
     // getPokemonList(offset: number = 0, limit: number = 20): Observable<PokemonListResponse> {
     //     return from(this.pokeApi.getPokemonsList({ offset, limit }) as Observable<PokemonListResponse>);
@@ -39,7 +40,22 @@ export class PokemonApiService {
         return from(this.pokemonClient.getPokemonSpeciesByName(name));
     }
 
-    getEvolutionChain(id: number): Observable<any> {
-        return from(this.pokeApi.getEvolutionChainById(id));
+    getEvolutionChainByPokemonName(name: string): Observable<any> {
+        return this.getPokemonSpecies(name).pipe(
+            switchMap((species) => {
+                if (!species || !species.evolution_chain || !species.evolution_chain.url) {
+                    return of(null);
+                }
+
+                const evolutionUrl = species.evolution_chain.url;
+                const evolutionId = evolutionUrl.split('/').filter(Boolean).pop();
+
+                return from(this.evolutionClient.getEvolutionChainById(Number(evolutionId)));
+            }),
+            catchError((error) => {
+                console.error('Error fetching evolution chain:', error);
+                return of(null);
+            }),
+        );
     }
 }
