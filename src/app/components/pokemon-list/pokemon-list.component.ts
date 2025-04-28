@@ -1,6 +1,8 @@
-import { Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, input, OnInit, output } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 import { SimplePokemon } from 'types/simple-pokemon.type';
-
 import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item.component';
 
 @Component({
@@ -8,7 +10,19 @@ import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item
     template: `
         <header>
             <nav>
-                <button class="big-button blue"></button>
+                <button class="big-button blue sprite-container">
+                    @if (currentSelectedPokemonId) {
+                        <img
+                            [src]="
+                                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' +
+                                currentSelectedPokemonId +
+                                '.png'
+                            "
+                            alt="Selected Pokemon"
+                            class="pokemon-sprite"
+                        />
+                    }
+                </button>
             </nav>
             <div class="nav-shadow"></div>
 
@@ -22,7 +36,11 @@ import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item
         <div class="section-wrapper">
             <section>
                 @for (pokemon of pokemonList(); let index = $index; track pokemon.name) {
-                    <app-pokemon-list-item [index]="$index" [pokemon]="pokemon" />
+                    <app-pokemon-list-item
+                        [index]="$index"
+                        [pokemon]="pokemon"
+                        (click)="updateSelectedPokemon(pokemon)"
+                    />
                 }
 
                 <div class="load-more-container">
@@ -44,11 +62,91 @@ import { PokemonListItemComponent } from '../pokemon-list-item/pokemon-list-item
         <footer></footer>
     `,
     styleUrl: './pokemon-list.component.scss',
-    imports: [PokemonListItemComponent],
+    imports: [PokemonListItemComponent, CommonModule],
+    styles: [
+        `
+            .sprite-container {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+            }
+
+            .pokemon-sprite {
+                width: 80px;
+                height: 80px;
+                object-fit: contain;
+                image-rendering: pixelated;
+                transform: scale(1.2);
+                position: absolute;
+            }
+        `,
+    ],
 })
-export class PokemonListComponent {
+export class PokemonListComponent implements OnInit, AfterViewInit {
     readonly pokemonList = input<SimplePokemon[]>([]);
     readonly isLoading = input<boolean>(false);
     readonly hasNextPage = input<boolean>(false);
     readonly loadMore = output<void>();
+
+    private readonly router = inject(Router);
+    private readonly cdRef = inject(ChangeDetectorRef);
+    currentSelectedPokemonId: string | null = null;
+
+    ngOnInit() {
+        // Listen for router events
+        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+            this.checkCurrentRoute();
+        });
+
+        // Initial check on component load
+        this.checkCurrentRoute();
+    }
+
+    ngAfterViewInit() {
+        // Double check after view init to catch any missed initializations
+        setTimeout(() => {
+            if (!this.currentSelectedPokemonId) {
+                this.checkCurrentRoute();
+                this.cdRef.detectChanges();
+            }
+        }, 100);
+    }
+
+    checkCurrentRoute() {
+        const url = this.router.url;
+        const match = url.match(/detail:([^)]+)/);
+
+        if (match) {
+            const selectedName = match[1];
+            const pokemon = this.findPokemonByName(selectedName);
+
+            if (pokemon) {
+                const idMatch = pokemon.url.match(/\/([0-9]+)\/$/);
+                this.currentSelectedPokemonId = idMatch ? idMatch[1] : null;
+                this.cdRef.detectChanges();
+            }
+        }
+    }
+
+    findPokemonByName(name: string): SimplePokemon | undefined {
+        // First try to find in the current list
+        let pokemon = this.pokemonList().find((p) => p.name === name);
+
+        // If not found and we don't have any, schedule a recheck later when data might be loaded
+        if (!pokemon && this.pokemonList().length === 0) {
+            setTimeout(() => {
+                this.checkCurrentRoute();
+            }, 500);
+        }
+
+        return pokemon;
+    }
+
+    updateSelectedPokemon(pokemon: SimplePokemon) {
+        const idMatch = pokemon.url.match(/\/([0-9]+)\/$/);
+        if (idMatch) {
+            this.currentSelectedPokemonId = idMatch[1];
+        }
+    }
 }
