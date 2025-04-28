@@ -9,4 +9,43 @@ export interface Pokemon {
     weight: number;
     types: PokemonType[];
     sprites: PokemonSprite;
+    stats: Stat[];
+    moves: Move[];
+    abilities: Ability[];
+}
+
+export interface Stat {
+    base_stat: number;
+    effort: number;
+    stat: {
+        name: string;
+        url: string;
+    };
+}
+
+export interface Move {
+    move: {
+        name: string;
+        url: string;
+    };
+    version_group_details: Array<{
+        level_learned_at: number;
+        move_learn_method: {
+            name: string;
+            url: string;
+        };
+        version_group: {
+            name: string;
+            url: string;
+        };
+    }>;
+}
+
+export interface Ability {
+    ability: {
+        name: string;
+        url: string;
+    };
+    is_hidden: boolean;
+    slot: number;
 }
