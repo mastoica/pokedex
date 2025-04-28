@@ -57,8 +57,12 @@ export class PokemonListItemComponent {
 
     isSelected(): boolean {
         const url = this.router.url;
-        const regex = new RegExp(`detail:${this.pokemon().name}`, 'i');
-        return regex.test(url);
+        // Extract the Pokemon name from the URL (detail:name)
+        const match = url.match(/detail:([^)]+)/);
+        if (!match) return false;
+
+        // Check for exact name match
+        return match[1] === this.pokemon().name;
     }
 
     navigateToPokemon() {
